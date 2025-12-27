@@ -7,8 +7,19 @@ from sqlalchemy import func
 
 app = Flask(__name__)
 
-db_url = os.getenv("DATABASE_URL", "sqlite:///fittrack.db")
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+db_url = os.getenv("DATABASE_URL")
+
+# Render sometimes provides old scheme
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+# Force psycopg (v3) driver so SQLAlchemy doesn't look for psycopg2
+if db_url and db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+# Fallback to local sqlite for local dev
+app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///fittrack.db"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
