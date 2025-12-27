@@ -19,6 +19,47 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100">
+  <body class="bg-slate-950 text-slate-100">
+
+  <!-- 🌴 HAWAII LOADING SCREEN START -->
+  <div id="hawaii-loader" style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <div style="position:absolute; inset:0; background:#020617;"></div>
+    <div style="position:absolute; inset:0; background:url('{{ url_for('static', filename='images/hero.jpg') }}') center/cover no-repeat; opacity:.35;"></div>
+    <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(2,6,23,.95), rgba(2,6,23,.45), rgba(2,6,23,.95));"></div>
+
+    <div style="position:relative; text-align:center; padding:24px; max-width:520px;">
+      <div style="font-size:28px; font-weight:800; letter-spacing:.5px;">Operation Hawaii</div>
+      <div style="margin-top:8px; font-size:14px; opacity:.85;">Warming up the island 🌴</div>
+      <div style="margin-top:4px; font-size:14px; opacity:.85;">
+        If it’s been a while, first load may take ~30 seconds.
+      </div>
+      <div style="margin-top:18px; height:6px; width:220px; border-radius:999px; background:rgba(255,255,255,.15); overflow:hidden; margin-left:auto; margin-right:auto;">
+        <div style="height:100%; width:55%; background:rgba(16,185,129,.85); animation: hawaiiBar 1.2s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes hawaiiBar {
+      0% { transform: translateX(-60%); }
+      50% { transform: translateX(60%); }
+      100% { transform: translateX(-60%); }
+    }
+  </style>
+
+  <script>
+    window.addEventListener("load", function() {
+      const el = document.getElementById("hawaii-loader");
+      if (!el) return;
+      el.style.transition = "opacity .25s ease";
+      el.style.opacity = "0";
+      setTimeout(() => el.remove(), 250);
+    });
+  </script>
+  <!-- 🌴 HAWAII LOADING SCREEN END -->
+
+  <div class="max-w-5xl mx-auto px-4 py-6">
+
   <div class="max-w-5xl mx-auto px-4 py-6">
     <div class="flex items-center justify-between gap-3">
       <div class="flex items-center gap-3">
