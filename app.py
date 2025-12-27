@@ -65,6 +65,14 @@ class Meal(db.Model):
     protein_g = db.Column(db.Integer, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class WorkoutLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    day = db.Column(db.Date, index=True, nullable=False)
+    workout_type = db.Column(db.String(80), nullable=False)
+    minutes = db.Column(db.Integer, nullable=False, default=0)
+    calories = db.Column(db.Integer, nullable=False, default=0)
+    notes = db.Column(db.String(250), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 with app.app_context():
@@ -552,6 +560,34 @@ def export_csv():
         )
     return app.response_class("\n".join(lines), mimetype="text/csv")
 
+@app.route("/workouts", methods=["GET", "POST"])
+def workouts():
+    today = date.today()
+
+    if request.method == "POST":
+        wtype = (request.form.get("workout_type") or "").strip()
+        minutes = int(request.form.get("minutes") or 0)
+        calories = int(request.form.get("calories") or 0)
+        notes = (request.form.get("notes") or "").strip()[:250]
+
+        if wtype:
+            w = WorkoutLog(day=today, workout_type=wtype, minutes=minutes, calories=calories, notes=notes)
+            db.session.add(w)
+            db.session.commit()
+
+        return redirect(url_for("workouts"))
+
+    items = WorkoutLog.query.filter_by(day=today).order_by(WorkoutLog.created_at.desc()).all()
+    total_minutes = sum(x.minutes for x in items)
+    total_calories = sum(x.calories for x in items)
+
+    return render_template(
+        "workouts.html",
+        today=today,
+        items=items,
+        total_minutes=total_minutes,
+        total_calories=total_calories,
+    )
 
 
 
