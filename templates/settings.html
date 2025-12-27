@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set title = "Settings" %}
+{% block content %}
+  <div class="mt-6 rounded-2xl bg-slate-900 border border-slate-800 p-5">
+    <div class="text-2xl font-semibold">Settings</div>
+    <div class="mt-2 text-sm text-slate-400">Used for the “on pace” progress bar. Defaults: 225 → 190 by June 1.</div>
+
+    <form method="post" action="{{ url_for('settings_update') }}" class="mt-4 grid md:grid-cols-3 gap-3 text-sm">
+      <div>
+        <label class="text-slate-300">Start weight</label>
+        <input name="start_weight" value="{{ s.start_weight }}" inputmode="decimal" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+      </div>
+      <div>
+        <label class="text-slate-300">Goal weight</label>
+        <input name="goal_weight" value="{{ s.goal_weight }}" inputmode="decimal" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+      </div>
+      <div>
+        <label class="text-slate-300">Goal date</label>
+        <input name="goal_date" value="{{ s.goal_date.isoformat() if s.goal_date else '' }}" type="date" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+      </div>
+      <div class="md:col-span-3">
+        <button class="w-full px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium">Save settings</button>
+      </div>
+    </form>
+
+    <div class="mt-4 text-sm text-slate-300">
+      iPhone tip: once this is deployed on HTTPS, open it in Safari → Share → <span class="font-semibold">Add to Home Screen</span>.
+    </div>
+  </div>
+{% endblock %}

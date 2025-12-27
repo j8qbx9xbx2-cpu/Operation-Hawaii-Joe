@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% set title = "Guides" %}
+{% block content %}
+  <div class="mt-6 grid md:grid-cols-3 gap-4">
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4 md:col-span-2">
+      <div class="text-lg font-semibold">Restaurant guide</div>
+      <div class="text-sm text-slate-400">Stay in 11–7. Anchor protein. Avoid liquid calories.</div>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="text-slate-300">
+            <tr>
+              <th class="text-left py-2">Type</th>
+              <th class="text-left py-2">Order</th>
+              <th class="text-left py-2">Avoid</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-200">
+            {% for t, o, a in restaurant %}
+              <tr class="border-t border-slate-800">
+                <td class="py-2 font-medium">{{ t }}</td>
+                <td class="py-2">{{ o }}</td>
+                <td class="py-2 text-slate-400">{{ a }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Vacation damage control</div>
+      <ul class="mt-3 space-y-2 text-sm text-slate-200">
+        {% for r in vacation_rules %}
+          <li class="flex gap-2"><span class="text-emerald-400">•</span><span>{{ r }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-4 rounded-2xl bg-slate-900 border border-slate-800 p-4">
+    <div class="text-lg font-semibold">Post–June maintenance</div>
+    <div class="mt-3 grid md:grid-cols-3 gap-3 text-sm">
+      {% for k, v in maintenance %}
+        <div class="rounded-xl bg-slate-950 border border-slate-800 p-3">
+          <div class="text-slate-400">{{ k }}</div>
+          <div class="font-medium">{{ v }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

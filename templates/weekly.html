@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% set title = "Weekly" %}
+{% block content %}
+  <div class="mt-6 grid md:grid-cols-2 gap-4">
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Weekly averages</div>
+      <div class="text-sm text-slate-400">Last ~16 weeks (Mon–Sun). Trend beats daily noise.</div>
+      <div class="mt-3 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="text-slate-300">
+            <tr>
+              <th class="text-left py-2">Week</th>
+              <th class="text-left py-2">Wt</th>
+              <th class="text-left py-2">Waist</th>
+              <th class="text-left py-2">Cals</th>
+              <th class="text-left py-2">Prot</th>
+              <th class="text-left py-2">Miles</th>
+              <th class="text-left py-2">Act Cals</th>
+              <th class="text-left py-2">Rings%</th>
+              <th class="text-left py-2">Comp</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-200">
+            {% for w in weeks %}
+              <tr class="border-t border-slate-800">
+                <td class="py-2 font-medium">{{ w.week_start.strftime("%b %d") }}</td>
+                <td class="py-2">{{ w.avg_weight or "—" }}</td>
+                <td class="py-2">{{ w.avg_waist or "—" }}</td>
+                <td class="py-2">{{ w.avg_cals or "—" }}</td>
+                <td class="py-2">{{ w.avg_prot or "—" }}</td>
+                <td class="py-2">{{ w.avg_miles or "—" }}</td>
+                <td class="py-2">{{ w.avg_active or "—" }}</td>
+                <td class="py-2">{{ w.rings_pct or "—" }}</td>
+                <td class="py-2">{{ w.avg_comp or "—" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Waist trend (last 60 days)</div>
+      <div class="text-sm text-slate-400">Measure at navel, same time of day.</div>
+      <div class="mt-3 rounded-2xl bg-slate-950 border border-slate-800 p-3">
+        <canvas id="waistChart"></canvas>
+      </div>
+
+      <div class="mt-4 rounded-2xl bg-slate-950 border border-slate-800 p-3">
+        <div class="text-lg font-semibold mb-2">Walking miles (last 60 days)</div>
+        <canvas id="milesChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+<script>
+const labels = {{ labels|tojson }};
+const waist = {{ waist|tojson }};
+const miles = {{ miles|tojson }};
+new Chart(document.getElementById('waistChart'), {
+  type: 'line',
+  data: { labels, datasets: [{ label: 'Waist (in)', data: waist, tension: 0.25 }] },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#cbd5e1' } } },
+    scales: {
+      x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.15)' } },
+      y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.15)' } }
+    }
+  }
+});
+new Chart(document.getElementById('milesChart'), {
+  type: 'line',
+  data: { labels, datasets: [{ label: 'Miles', data: miles, tension: 0.25 }] },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#cbd5e1' } } },
+    scales: {
+      x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.15)' } },
+      y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.15)' } }
+    }
+  }
+});
+</script>
+{% endblock %}

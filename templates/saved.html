@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% set title = "Saved Meals" %}
+{% block content %}
+  <div class="mt-6 rounded-2xl bg-slate-900 border border-slate-800 p-5">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <div class="text-2xl font-semibold">Saved Meals</div>
+        <div class="text-sm text-slate-400">Define your go-to meals once, then one-tap log them (Calories + Protein only).</div>
+      </div>
+      <a href="{{ url_for('day_view', dstr=today.isoformat()) }}" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm">Open Today</a>
+    </div>
+
+    <div class="mt-5 rounded-2xl bg-slate-950 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Add a saved meal</div>
+      <form method="post" action="{{ url_for('saved_add') }}" class="mt-3 grid grid-cols-6 gap-2 text-sm">
+        <input name="name" class="col-span-3 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800" placeholder="Meal name (e.g., Chicken bowl)" required>
+        <input name="calories" inputmode="numeric" class="col-span-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800" placeholder="cals">
+        <input name="protein_g" inputmode="numeric" class="col-span-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800" placeholder="prot">
+        <button class="col-span-1 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium">Save</button>
+      </form>
+      <div class="mt-2 text-xs text-slate-500">Tip: round restaurant meals up (better for cutting).</div>
+    </div>
+
+    <div class="mt-5 grid md:grid-cols-2 gap-3">
+      {% for m in meals %}
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-lg font-semibold">{{ m.name }}</div>
+              <div class="text-sm text-slate-400">{{ m.calories or "—" }} cals • {{ m.protein_g or "—" }}g protein</div>
+            </div>
+            <form method="post" action="{{ url_for('saved_delete', sid=m.id) }}">
+              <button class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-medium">Delete</button>
+            </form>
+          </div>
+
+          <form method="post" action="{{ url_for('saved_log', sid=m.id) }}" class="mt-3 grid grid-cols-6 gap-2 text-sm">
+            <input type="hidden" name="day" value="{{ today.isoformat() }}">
+            <input name="time" class="col-span-2 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800" placeholder="time (optional)">
+            <button class="col-span-4 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-medium">Log to today</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="text-slate-400 text-sm">No saved meals yet. Add 8–12 staples and you’ll barely ever type again.</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

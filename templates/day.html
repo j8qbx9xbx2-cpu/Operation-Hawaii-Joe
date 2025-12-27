@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% set title = "Day" %}
+{% block content %}
+  <div class="mt-6 flex items-center justify-between">
+    <div>
+      <div class="text-sm text-slate-400">Day</div>
+      <div class="text-2xl font-semibold">{{ day.isoformat() }}</div>
+      <div class="mt-1 text-sm">Compliance: <span class="{{ 'text-emerald-400' if score==4 else ('text-amber-300' if score==3 else 'text-rose-300') }}">{{ score }}/5</span></div>
+    </div>
+    <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm">Back</a>
+  </div>
+
+  <div class="mt-4 grid md:grid-cols-2 gap-4">
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Day inputs</div>
+      <form method="post" action="{{ url_for('day_update') }}" class="mt-3 space-y-3">
+        <input type="hidden" name="day" value="{{ day.isoformat() }}">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-300">Weight (AM)</label>
+            <input name="weight_am" value="{{ log.weight_am or '' }}" inputmode="decimal" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="e.g. 223.4">
+          </div>
+          <div>
+            <label class="text-sm text-slate-300">Waist (in)</label>
+            <input name="waist_in" value="{{ log.waist_in or '' }}" inputmode="decimal" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="e.g. 38.5">
+          </div>
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-300">Walking miles</label>
+            <input name="walking_miles" value="{{ log.walking_miles or '' }}" inputmode="decimal" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="e.g. 3.5">
+          </div>
+          <div>
+            <label class="text-sm text-slate-300">Active calories (Apple)</label>
+            <input name="active_calories" value="{{ log.active_calories or '' }}" inputmode="numeric" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="optional">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-sm text-slate-300">Cal target</label>
+            <input name="cal_target" value="{{ log.cal_target or 2000 }}" inputmode="numeric" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+          </div>
+          <div>
+            <label class="text-sm text-slate-300">Protein target</label>
+            <input name="prot_target" value="{{ log.prot_target or 190 }}" inputmode="numeric" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 text-sm">
+          <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+            <input type="checkbox" name="walk_done" {{ 'checked' if log.walk_done else '' }}>
+            Walk done
+          </label>
+          <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+            <input type="checkbox" name="lift_done" {{ 'checked' if log.lift_done else '' }}>
+            Lift done
+          </label>
+          <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+            <input type="checkbox" name="if_done" {{ 'checked' if log.if_done else '' }}>
+            IF 11–7 adhered
+          </label>
+          <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800">
+            <input type="checkbox" name="rings_closed" {{ 'checked' if log.rings_closed else '' }}>
+            Closed rings
+          </label>
+        </div>
+
+        <div>
+          <label class="text-sm text-slate-300">Notes</label>
+          <textarea name="notes" rows="4" class="mt-1 w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="sleep, soreness, hunger, stress...">{{ log.notes or '' }}</textarea>
+        </div>
+
+        <button class="w-full px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium">Save day</button>
+      </form>
+    </div>
+
+    <div class="rounded-2xl bg-slate-900 border border-slate-800 p-4">
+      <div class="text-lg font-semibold">Meals</div>
+      <div class="text-sm text-slate-400">Meal-by-meal entry (your choice B).</div>
+
+      <form method="post" action="{{ url_for('meal_add') }}" class="mt-3 grid grid-cols-6 gap-2 text-sm">
+        <input type="hidden" name="day" value="{{ day.isoformat() }}">
+        <input name="time" class="col-span-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="11:30">
+        <input name="name" class="col-span-3 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="Meal name" required>
+        <input name="calories" inputmode="numeric" class="col-span-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="cals">
+        <input name="protein_g" inputmode="numeric" class="col-span-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-800" placeholder="prot">
+        <button class="col-span-6 mt-1 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-medium">Add meal</button>
+      </form>
+
+      <div class="mt-4 space-y-2">
+        {% for m in meals %}
+          <div class="rounded-xl bg-slate-950 border border-slate-800 p-3 text-sm">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="font-medium">{{ m.name }}</div>
+                <div class="text-slate-400">{{ m.time or "" }} • {{ m.calories or "—" }} cals • {{ m.protein_g or "—" }}g protein</div>
+              </div>
+              <form method="post" action="{{ url_for('meal_delete', mid=m.id) }}">
+                <button class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-medium">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <div class="text-slate-400 text-sm">No meals yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

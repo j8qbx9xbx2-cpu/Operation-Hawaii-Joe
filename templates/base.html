@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or "Operation Hawaii" }}</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#020617" />
+  <link rel="apple-touch-icon" href="/static/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+    }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <div class="max-w-5xl mx-auto px-4 py-6">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-400 to-indigo-500"></div>
+        <div>
+          <div class="text-xl font-semibold tracking-tight">Operation Hawaii</div>
+          <div class="text-sm text-slate-400">IF window: <span class="font-medium text-slate-200">11:00 am – 7:00 pm</span></div>
+        </div>
+      </div>
+      <div class="md:hidden w-full">
+        <select class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-sm"
+                onchange="if(this.value){window.location.href=this.value;}">
+          <option value="">Navigate…</option>
+          <option value="{{ url_for('dashboard') }}">Dashboard</option>
+          <option value="{{ url_for('meal_suggestions') }}">Meals</option>
+          <option value="{{ url_for('saved_meals') }}">Saved</option>
+          <option value="{{ url_for('guides') }}">Guides</option>
+          <option value="{{ url_for('weekly') }}">Weekly</option>
+          <option value="{{ url_for('settings') }}">Settings</option>
+          <option value="{{ url_for('reset_page') }}">Emergency Reset</option>
+          <option value="{{ url_for('export_csv') }}">Export CSV</option>
+        </select>
+      </div>
+      <div class="hidden md:flex gap-2">
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('meal_suggestions') }}">Meals</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('saved_meals') }}">Saved</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('guides') }}">Guides</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('weekly') }}">Weekly</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('settings') }}">Settings</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('reset_page') }}">Emergency Reset</a>
+        <a class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm" href="{{ url_for('export_csv') }}">Export CSV</a>
+      </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <div class="mt-10 text-xs text-slate-500">
+      Single-user app (no login). Cloud hosting friendly.
+    </div>
+  </div>
+</body>
+</html>

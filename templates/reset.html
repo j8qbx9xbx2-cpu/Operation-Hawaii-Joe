@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set title = "Emergency Reset" %}
+{% block content %}
+  <div class="mt-6 rounded-2xl bg-slate-900 border border-slate-800 p-5">
+    <div class="text-2xl font-semibold">2-week Emergency Fat Loss Reset</div>
+    <div class="mt-2 text-slate-300 text-sm">
+      Activating this sets your next 14 days to <span class="font-semibold">1650 cals</span> and <span class="font-semibold">200g protein</span>,
+      and prepends a reset banner into each day’s notes.
+    </div>
+
+    <div class="mt-4 grid md:grid-cols-2 gap-3 text-sm">
+      <div class="rounded-xl bg-slate-950 border border-slate-800 p-3">
+        <div class="text-slate-400">Use when</div>
+        <ul class="mt-2 space-y-1">
+          <li>• scale stalled 14+ days</li>
+          <li>• after vacation rebound</li>
+          <li>• you want a hard “re-lock” on compliance</li>
+        </ul>
+      </div>
+      <div class="rounded-xl bg-slate-950 border border-slate-800 p-3">
+        <div class="text-slate-400">Non-negotiables</div>
+        <ul class="mt-2 space-y-1">
+          <li>• protein every meal</li>
+          <li>• no late snacks</li>
+          <li>• keep your daily walk</li>
+          <li>• 20-min lift, no impact</li>
+          <li>• strict IF 11–7</li>
+        </ul>
+      </div>
+    </div>
+
+    <form method="post" action="{{ url_for('reset_activate') }}" class="mt-5">
+      <button class="w-full px-4 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 font-semibold">
+        Activate 14-day Reset (starting today)
+      </button>
+    </form>
+  </div>
+{% endblock %}
